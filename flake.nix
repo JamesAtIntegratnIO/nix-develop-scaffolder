@@ -1,5 +1,5 @@
 {
-  description = "Site Map Builder";
+  description = "Nix Develop Scaffolder";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

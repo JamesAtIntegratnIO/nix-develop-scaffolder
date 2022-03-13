@@ -1,4 +1,4 @@
-BINARY_NAME=site-map-builder
+BINARY_NAME=nix-develop-scaffolder
 
 # Build for multiple architectures
 build:
