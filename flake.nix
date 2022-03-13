@@ -19,6 +19,9 @@
             pkgs.gopls
             pkgs.go-outline
             pkgs.gopkgs
+            pkgs.godef
+            pkgs.gocode-gomod
+            pkgs.gocode
           ];
         };
       });
