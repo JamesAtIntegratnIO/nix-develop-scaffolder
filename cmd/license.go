@@ -22,11 +22,15 @@ var licenseCmd = &cobra.Command{
 }
 
 var licenseAddCmd = &cobra.Command{
-	Use:   "add [license] [name] [year]",
+	Use:   "add [license key] [name] [year]",
 	Short: "Add a license to your project",
-	Args:  cobra.MinimumNArgs(2),
+	Long: `
+		Add a license to your project.
+		The license key is the key that is returned from the {license list} command
+		`,
+	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		license := args[0]
+		key := args[0]
 		name := args[1]
 		year := strconv.Itoa(time.Now().Year())
 		if len(args) > 2 {
@@ -34,8 +38,8 @@ var licenseAddCmd = &cobra.Command{
 		} else {
 
 		}
-		fmt.Println("Adding license:", license)
-		createLicenseFile(license, name, year)
+		fmt.Println("Adding license:", key)
+		createLicenseFile(key, name, year)
 	},
 }
 
@@ -48,9 +52,9 @@ var licensesListCmd = &cobra.Command{
 	},
 }
 
-func createLicenseFile(l string, name string, year string) {
+func createLicenseFile(key string, name string, year string) {
 	fmt.Println("Creating license file")
-	license, err := templateHandler.PopulateLicenseTemplate(l, name, year)
+	license, err := templateHandler.PopulateLicenseTemplate(key, name, year)
 	if err != nil {
 		fmt.Println(err)
 		return
