@@ -1,9 +1,7 @@
 package templateHandler
 
 import (
-	"bytes"
 	"encoding/json"
-	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -54,22 +52,7 @@ func PopulateLicenseTemplate(lname string, name string, year string) (string, er
 	license.Body = strings.ReplaceAll(license.Body, "[year]", year)
 	license.Body = strings.ReplaceAll(license.Body, "[fullname]", name)
 
-	t, err := template.New("license").Parse(license.Body)
-	if err != nil {
-		return "", err
-	}
-	var buffer bytes.Buffer
-	err = t.Execute(&buffer, struct {
-		Year     string
-		FullName string
-	}{
-		Year:     year,
-		FullName: name,
-	})
-	if err != nil {
-		return "", err
-	}
-	return buffer.String(), nil
+	return license.Body, nil
 }
 
 // Fetch License types from https://api.github.com/licenses
