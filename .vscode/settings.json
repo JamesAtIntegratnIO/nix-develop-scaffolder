@@ -1,4 +1,0 @@
-{
-    "makefile.extensionOutputFolder": "./.vscode",
-    "nixEnvSelector.nixFile": "${workspaceRoot}/flake.nix"
-}
