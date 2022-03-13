@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 type GitIgnores struct {
@@ -57,6 +58,16 @@ func FetchGitIgnores(names []string) (gitIgnores GitIgnores, err error) {
 	return gitIgnores, nil
 }
 
+func FetchGitIgnoresBulk(names []string) (gitIgnore string, err error) {
+	keys := strings.Join(names, ",")
+	gitIgnore, err = FetchGitIgnore(keys)
+	if err != nil {
+		return gitIgnore, err
+	}
+
+	return gitIgnore, nil
+}
+
 func GenerateGitIgnoreFromTemplate(names []string) string {
 	IDEs := []IDE{Vscode, Vim, Emacs}
 	for _, ide := range IDEs {
@@ -76,4 +87,18 @@ func GenerateGitIgnoreFromTemplate(names []string) string {
 	var buffer bytes.Buffer
 	t.Execute(&buffer, gitIgnores)
 	return buffer.String()
+}
+
+// Get gitignore list from https://www.toptal.com/developers/gitignore/api/list
+func FetchGitIgnoreList() ([]string, error) {
+	resp, err := http.Get("https://www.toptal.com/developers/gitignore/api/list?format=lines")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return strings.Split(string(body), "\n"), nil
 }
