@@ -35,8 +35,6 @@ var licenseAddCmd = &cobra.Command{
 		year := strconv.Itoa(time.Now().Year())
 		if len(args) > 2 {
 			year = args[2]
-		} else {
-
 		}
 		fmt.Println("Adding license:", key)
 		createLicenseFile(key, name, year)
