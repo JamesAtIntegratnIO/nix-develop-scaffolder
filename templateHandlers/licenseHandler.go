@@ -71,3 +71,28 @@ func PopulateLicenseTemplate(lname string, name string, year string) (string, er
 	}
 	return buffer.String(), nil
 }
+
+// Fetch License types from https://api.github.com/licenses
+func FetchLicenses() ([]License, error) {
+	var licenses []License
+	req, err := http.NewRequest("GET", "https://api.github.com/licenses", nil)
+	if err != nil {
+		return licenses, err
+	}
+	req.Header.Add("Accept", "application/vnd.github.v3+json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return licenses, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return licenses, err
+	}
+	err = json.Unmarshal(body, &licenses)
+	if err != nil {
+		return licenses, err
+	}
+
+	return licenses, nil
+}
