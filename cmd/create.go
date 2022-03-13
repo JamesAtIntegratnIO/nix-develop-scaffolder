@@ -18,36 +18,16 @@ type Project struct {
 	Path        string
 }
 
-type IDE struct {
-	Name    string
-	Enabled bool
-}
-
 var Langs []langs.Lang
-
-var Vscode IDE = IDE{
-	Name:    "visualstudiocode",
-	Enabled: false,
-}
-
-var Vim IDE = IDE{
-	Name:    "vim",
-	Enabled: false,
-}
-
-var Emacs IDE = IDE{
-	Name:    "emacs",
-	Enabled: false,
-}
 
 var P = Project{}
 
 func init() {
 	rootCmd.AddCommand(create)
 	create.Flags().StringVarP(&langs.GoLang.Version, "go", "g", "", "go version")
-	create.Flags().BoolVar(&Vscode.Enabled, "vscode", false, "generate vscode gitignore")
-	create.Flags().BoolVar(&Vim.Enabled, "vim", false, "generate vim gitignore")
-	create.Flags().BoolVar(&Emacs.Enabled, "emacs", false, "generate emacs gitignore")
+	create.Flags().BoolVar(&templateHandler.Vscode.Enabled, "vscode", false, "generate vscode gitignore")
+	create.Flags().BoolVar(&templateHandler.Vim.Enabled, "vim", false, "generate vim gitignore")
+	create.Flags().BoolVar(&templateHandler.Emacs.Enabled, "emacs", false, "generate emacs gitignore")
 }
 
 var create = &cobra.Command{
@@ -95,12 +75,6 @@ func (p *Project) writeProjectFiles() {
 	}
 	gitIgnoreNames := langs.GetLangNames(Langs)
 
-	IDEs := []IDE{Vscode, Vim, Emacs}
-	for _, IDE := range IDEs {
-		if IDE.Enabled {
-			gitIgnoreNames = append(gitIgnoreNames, IDE.Name)
-		}
-	}
 	if len(gitIgnoreNames) > 0 {
 		gitIgnore := templateHandler.GenerateGitIgnoreFromTemplate(gitIgnoreNames)
 		gitIgnoreFile := p.Path + "/.gitignore"
