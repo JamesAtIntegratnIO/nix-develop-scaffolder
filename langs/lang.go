@@ -30,3 +30,10 @@ func ExecuteMultipleBuildInputsToString(langs []Lang) string {
 	}
 	return buffer.String()
 }
+
+func GetLangNames(langs []Lang) (names []string) {
+	for _, lang := range langs {
+		names = append(names, lang.Name)
+	}
+	return names
+}
