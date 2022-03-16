@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"nix-project-generator/helpers"
@@ -25,6 +26,7 @@ var P = Project{}
 func init() {
 	rootCmd.AddCommand(create)
 	create.Flags().StringVarP(&langs.GoLang.Version, "go", "g", "", "go version")
+	create.Flags().StringVarP(&langs.NodeJS.Version, "nodejs", "n", "", "nodejs version")
 	create.Flags().BoolVar(&templateHandler.Vscode.Enabled, "vscode", false, "generate vscode gitignore")
 	create.Flags().BoolVar(&templateHandler.Vim.Enabled, "vim", false, "generate vim gitignore")
 	create.Flags().BoolVar(&templateHandler.Emacs.Enabled, "emacs", false, "generate emacs gitignore")
@@ -59,6 +61,17 @@ func (p *Project) createProject() {
 		langs.GoLang.Version = strings.Replace(langs.GoLang.Version, ".", "_", -1)
 		Langs = append(Langs, langs.GoLang)
 	}
+	if langs.NodeJS.Version != "" {
+		if langs.NodeJS.Version == "latest" {
+			langs.NodeJS.Version = ""
+		}
+		if strings.Contains(langs.NodeJS.Version, ".") {
+			fmt.Println("NodeJS only expects the major version, it will automatically fetch the latest minor version")
+			os.Exit(1)
+		}
+		Langs = append(Langs, langs.NodeJS)
+	}
+
 	p.writeProjectFiles()
 }
 
